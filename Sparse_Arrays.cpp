@@ -82,3 +82,27 @@ int main()
 
     return 0;
 }
+
+// DAY 11 (Subsets)=================================================
+
+// by subsequence
+void subset_rec(vector<int> &nums, int idx, vector<vector<int>> &ans, vector<int> sub)
+{
+    if (idx == nums.size())
+    {
+        ans.push_back(sub);
+        return;
+    }
+
+    sub.push_back(nums[idx]);
+    subset_rec(nums, idx + 1, ans, sub);
+    sub.pop_back();
+    subset_rec(nums, idx + 1, ans, sub);
+}
+
+vector<vector<int>> subsets(vector<int> &nums)
+{
+    vector<vector<int>> ans;
+    subset_rec(nums, 0, ans, {});
+    return ans;
+}
