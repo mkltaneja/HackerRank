@@ -6,25 +6,49 @@ vector<string> split_string(string);
 
 // Complete the arrayManipulation function below.
 
-// Method 1 -> TLE
-long arrayManipulation(int n, vector<vector<int>> queries) 
+// Method 1 -> O(n*m)
+// TLE
+long arrayManipulation(int n, vector<vector<int>> queries)
 {
-    vector<long> z(n+1,0);
-    for(int i=0;i<queries.size();i++)
+    vector<long> z(n + 1, 0);
+    for (int i = 0; i < queries.size(); i++)
     {
         int a = queries[i][0], b = queries[i][1], k = queries[i][2];
-        for(int j=a;j<=b;j++)
+        for (int j = a; j <= b; j++)
             z[j] += k;
     }
 
     long maxi = INT_MIN;
-    for(long i : z)
+    for (long i : z)
         maxi = max(maxi, i);
 
     return maxi;
 }
 
+// Method 2 -> O(n+m)
+// AC
+long arrayManipulation(int n, vector<vector<int>> queries)
+{
+    int m = queries.size();
+    vector<long> sum(n + 2, 0);
+    for (int i = 0; i < m; i++)
+    {
+        int a = queries[i][0], b = queries[i][1], k = queries[i][2];
+        sum[a] += k;
+        sum[b + 1] -= k;
+    }
 
+    // Converting into Prefix Sum Array and finding maximum
+
+    long maxi = INT_MIN;
+    for (int i = 1; i <= n + 1; i++)
+    {
+        sum[i] += sum[i - 1];
+        maxi = max(maxi, sum[i]);
+    }
+
+    return maxi;
+}
 
 int main()
 {
@@ -40,10 +64,12 @@ int main()
     int m = stoi(nm[1]);
 
     vector<vector<int>> queries(m);
-    for (int i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++)
+    {
         queries[i].resize(3);
 
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < 3; j++)
+        {
             cin >> queries[i][j];
         }
 
@@ -59,14 +85,16 @@ int main()
     return 0;
 }
 
-vector<string> split_string(string input_string) {
-    string::iterator new_end = unique(input_string.begin(), input_string.end(), [] (const char &x, const char &y) {
+vector<string> split_string(string input_string)
+{
+    string::iterator new_end = unique(input_string.begin(), input_string.end(), [](const char &x, const char &y) {
         return x == y and x == ' ';
     });
 
     input_string.erase(new_end, input_string.end());
 
-    while (input_string[input_string.length() - 1] == ' ') {
+    while (input_string[input_string.length() - 1] == ' ')
+    {
         input_string.pop_back();
     }
 
@@ -76,7 +104,8 @@ vector<string> split_string(string input_string) {
     size_t i = 0;
     size_t pos = input_string.find(delimiter);
 
-    while (pos != string::npos) {
+    while (pos != string::npos)
+    {
         splits.push_back(input_string.substr(i, pos - i));
 
         i = pos + 1;
