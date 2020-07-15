@@ -2,55 +2,68 @@
 
 using namespace std;
 
-class SinglyLinkedListNode {
-    public:
-        int data;
-        SinglyLinkedListNode *next;
+class SinglyLinkedListNode
+{
+public:
+    int data;
+    SinglyLinkedListNode *next;
 
-        SinglyLinkedListNode(int node_data) {
-            this->data = node_data;
-            this->next = nullptr;
-        }
+    SinglyLinkedListNode(int node_data)
+    {
+        this->data = node_data;
+        this->next = nullptr;
+    }
 };
 
-class SinglyLinkedList {
-    public:
-        SinglyLinkedListNode *head;
-        SinglyLinkedListNode *tail;
+class SinglyLinkedList
+{
+public:
+    SinglyLinkedListNode *head;
+    SinglyLinkedListNode *tail;
 
-        SinglyLinkedList() {
-            this->head = nullptr;
-            this->tail = nullptr;
+    SinglyLinkedList()
+    {
+        this->head = nullptr;
+        this->tail = nullptr;
+    }
+
+    void insert_node(int node_data)
+    {
+        SinglyLinkedListNode *node = new SinglyLinkedListNode(node_data);
+
+        if (!this->head)
+        {
+            this->head = node;
+        }
+        else
+        {
+            this->tail->next = node;
         }
 
-        void insert_node(int node_data) {
-            SinglyLinkedListNode* node = new SinglyLinkedListNode(node_data);
-
-            if (!this->head) {
-                this->head = node;
-            } else {
-                this->tail->next = node;
-            }
-
-            this->tail = node;
-        }
+        this->tail = node;
+    }
 };
 
-void print_singly_linked_list(SinglyLinkedListNode* node, string sep, ofstream& fout) {
-    while (node) {
+void print_singly_linked_list(SinglyLinkedListNode *node, string sep, ofstream &fout)
+{
+    while (node)
+    {
         fout << node->data;
 
         node = node->next;
 
-        if (node) {
+        if (node)
+        {
             fout << sep;
         }
     }
 }
 
-void free_singly_linked_list(SinglyLinkedListNode* node) {
-    while (node) {
-        SinglyLinkedListNode* temp = node;
+void free_singly_linked_list(SinglyLinkedListNode *node)
+{
+    while (node)
+    {
+        SinglyLinkedListNode *temp = node;
         node = node->next;
 
         free(temp);
@@ -68,30 +81,41 @@ void free_singly_linked_list(SinglyLinkedListNode* node) {
  * };
  *
  */
-int findMergeNode(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) 
+int findMergeNode(SinglyLinkedListNode *head1, SinglyLinkedListNode *head2)
 {
-    SinglyLinkedListNode* temp = head1;
-    while(temp->next != nullptr)
-        temp = temp->next;
-    temp->next = head2;       // Converted into cycle
+    if (head1 == nullptr || head2 == nullptr)
+        return 0;
+    if (head1->next == nullptr && head2->next == nullptr && head1->data == head2->data)
+        return head1->data;
 
-    SinglyLinkedListNode* fast = head1;
-    SinglyLinkedListNode* slow = head1;
-    while(fast != nullptr && fast->next != nullptr)
+    SinglyLinkedListNode *temp = head1;
+    while (temp->next != nullptr)
+        temp = temp->next;
+    temp->next = head2; // Converted into cycle
+
+    SinglyLinkedListNode *fast = head1;
+    SinglyLinkedListNode *slow = head1;
+    while (fast != nullptr && fast->next != nullptr)
     {
         fast = fast->next->next;
         slow = slow->next;
-        if(fast == slow)
+        if (fast == slow)
             break;
     }
-    slow = head1;
-    while(slow != fast)
+    if (slow == fast)
     {
-        slow = slow->next;
-        fast = fast->next;
+        slow = head1;
+        while (slow != fast)
+        {
+            slow = slow->next;
+            fast = fast->next;
+        }
+        temp->next = nullptr; // restore
+        return slow->data;
     }
 
-    return slow->data;
+    temp->next = nullptr; // restore
+    return 0;
 }
 
 int main()
@@ -102,55 +126,62 @@ int main()
     cin >> tests;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    for (int tests_itr = 0; tests_itr < tests; tests_itr++) {
+    for (int tests_itr = 0; tests_itr < tests; tests_itr++)
+    {
         int index;
         cin >> index;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        SinglyLinkedList* llist1 = new SinglyLinkedList();
+        SinglyLinkedList *llist1 = new SinglyLinkedList();
 
         int llist1_count;
         cin >> llist1_count;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        for (int i = 0; i < llist1_count; i++) {
+        for (int i = 0; i < llist1_count; i++)
+        {
             int llist1_item;
             cin >> llist1_item;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
             llist1->insert_node(llist1_item);
         }
-      
-      	SinglyLinkedList* llist2 = new SinglyLinkedList();
+
+        SinglyLinkedList *llist2 = new SinglyLinkedList();
 
         int llist2_count;
         cin >> llist2_count;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        for (int i = 0; i < llist2_count; i++) {
+        for (int i = 0; i < llist2_count; i++)
+        {
             int llist2_item;
             cin >> llist2_item;
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
             llist2->insert_node(llist2_item);
         }
-      
-      	SinglyLinkedListNode* ptr1 = llist1->head;
-      	SinglyLinkedListNode* ptr2 = llist2->head;
-      
-      	for (int i = 0; i < llist1_count; i++) {
-            if (i < index) {
-          		ptr1 = ptr1->next;
+
+        SinglyLinkedListNode *ptr1 = llist1->head;
+        SinglyLinkedListNode *ptr2 = llist2->head;
+
+        for (int i = 0; i < llist1_count; i++)
+        {
+            if (i < index)
+            {
+                ptr1 = ptr1->next;
             }
         }
-      
-      	for (int i = 0; i < llist2_count; i++) {
-          	if (i != llist2_count-1) {
-          		ptr2 = ptr2->next;
+
+        for (int i = 0; i < llist2_count; i++)
+        {
+            if (i != llist2_count - 1)
+            {
+                ptr2 = ptr2->next;
             }
         }
-      
-      	ptr2->next = ptr1;
+
+        ptr2->next = ptr1;
 
         int result = findMergeNode(llist1->head, llist2->head);
 
