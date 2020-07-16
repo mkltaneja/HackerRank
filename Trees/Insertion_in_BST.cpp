@@ -70,15 +70,21 @@ int main()
     int t;
     int data;
 
-    std::cin >> t;
+    // std::cin >> t;
 
-    while (t-- > 0)
-    {
-        std::cin >> data;
-        root = myTree.insert(root, data);
-    }
+    // while (t-- > 0)
+    // {
+    //     std::cin >> data;
+    //     root = myTree.insert(root, data);
+    // }
 
-    myTree.preOrder(root);
+    // myTree.preOrder(root);
 
+
+    int a = 3;
+    int n = 5, ans = 0;;
+    while(a = n){cout<<a<<endl;
+        ans++;}
+    cout<<ans;
     return 0;
 }
