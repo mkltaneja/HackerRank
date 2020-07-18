@@ -120,6 +120,7 @@ void decode_huff(node *root, string s)
     cout << str << endl;
 }
 
+
 int main()
 {
 
