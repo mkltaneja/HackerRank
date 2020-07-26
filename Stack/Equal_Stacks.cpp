@@ -7,6 +7,8 @@ vector<string> split_string(string);
 /*
  * Complete the equalStacks function below.
  */
+
+// Method 1
 int equalStacks(vector<int> h1, vector<int> h2, vector<int> h3)
 {
     reverse(h1.begin(), h1.end());
@@ -21,15 +23,15 @@ int equalStacks(vector<int> h1, vector<int> h2, vector<int> h3)
     for (unsigned long int i = 1; i < h3.size(); i++)
         psum3[i] = psum3[i - 1] + h3[i];
 
-    for (int i : psum1)
-        cout << i << " ";
-    cout << endl;
-    for (int i : psum2)
-        cout << i << " ";
-    cout << endl;
-    for (int i : psum3)
-        cout << i << " ";
-    cout << endl;
+    // for (int i : psum1)
+    //     cout << i << " ";
+    // cout << endl;
+    // for (int i : psum2)
+    //     cout << i << " ";
+    // cout << endl;
+    // for (int i : psum3)
+    //     cout << i << " ";
+    // cout << endl;
 
     int mini = min(psum1.back(), min(psum2.back(), psum3.back()));
     // cout<<psum1.back()<<" "<<psum2.back()<<" "<<psum3.back()<<endl;
@@ -52,6 +54,36 @@ int equalStacks(vector<int> h1, vector<int> h2, vector<int> h3)
     }
 
     return mini;
+}
+
+// OR
+
+// Method 2
+// USING MAP
+int equalStacks(vector<int> h1, vector<int> h2, vector<int> h3)
+{
+    reverse(h1.begin(), h1.end());
+    reverse(h2.begin(), h2.end());
+    reverse(h3.begin(), h3.end());
+
+    unordered_map<int, int> m;
+    for (int i = 0; i < 3; ++i)
+    {
+        const vector<int> &v = i == 0 ? h1 : i == 1 ? h2 : h3;
+
+        int sum = 0;
+        for (int i : v)
+        {
+            sum += i;
+            ++m[sum];
+        }
+    }
+
+    int maxh = 0;
+    for (auto itr : m)
+        if (itr.second == 3)
+            maxh = max(maxh, itr.first);
+    return maxh;
 }
 
 int main()
