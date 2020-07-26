@@ -10,6 +10,10 @@ typedef struct node
 void update_height(node* nod)
 {
     int lh = -1, rh = -1;
+    if(nod->left)
+        lh = nod->left->ht;
+    if(nod->right)
+        rh = nod->right->ht;
     nod->ht = max(lh, rh) + 1;
 }
 
@@ -19,8 +23,8 @@ node* llrot(node* nod)
     node* lr = l->right;
     l->right = nod;
     nod->left = lr;
-    update_height(l);
     update_height(nod);
+    update_height(l);
     
     return l;
 }
@@ -30,20 +34,24 @@ node* rrrot(node* nod)
     node* rl = r->left;
     r->left = nod;
     nod->right = rl;
-    update_height(r);
     update_height(nod);
+    update_height(r);
 
     return r;
 }
 
 node* checkBF(node* nod)
 {
+    // cout<<nod->val<<" "<<nod->ht<<" --> ";
+    update_height(nod);
+    // cout<<nod->val<<" "<<nod->ht<<endl;
     int lh = -1, rh = -1;
     if(nod->left)
         lh = nod->left->ht;
     if(nod->right)
         rh = nod->right->ht;
     int BF = lh - rh;
+    // cout<<nod->val<<" "<<BF<<endl;
     
     // if(BF <= 1 && BF >= -1)
     //     return nod;
@@ -57,9 +65,9 @@ node* checkBF(node* nod)
         if(l->right)
             rhl = l->right->ht;
         int bfl = lhl - rhl;
-        if(bfl == -1)
+        if(bfl == 1)    // ll
             return llrot(nod);
-        else
+        else            // lr
         {
             nod->left = rrrot(nod->left);
             return llrot(nod);
@@ -75,9 +83,9 @@ node* checkBF(node* nod)
             rhr = r->right->ht;
         int bfr = lhr - rhr;
         
-        if(bfr == 1)
+        if(bfr == -1)   // rr
             return rrrot(nod);
-        else
+        else            // rl
         {
             nod->right = llrot(nod->right);
             return rrrot(nod);
@@ -86,8 +94,8 @@ node* checkBF(node* nod)
     return nod;
 }
 
-node * dup_insert(node * root,int val)
-{
+node * insert(node * root,int val)
+{ 
     if(root == nullptr)
     {
         node* nod = new node();
@@ -96,39 +104,10 @@ node * dup_insert(node * root,int val)
         return nod;
     }
     if(val < root->val)
-    {
-        root->left = dup_insert(root->left, val);
-        if(root->right)
-            root->ht = max(root->right->ht, root->left->ht + 1);
-        else 
-            root->ht = root->left->ht + 1;        
-    }
+        root->left = insert(root->left, val);
     else 
-    {
-        root->right = dup_insert(root->right, val);
-        if(root->left)
-            root->ht = max(root->left->ht, root->right->ht + 1);
-        else 
-            root->ht = root->right->ht + 1;
-    }
+        root->right = insert(root->right, val);    
     
     root = checkBF(root);
-    return root;
-}
-
-void inorder(node* nod)
-{
-    if(nod == nullptr)
-        return;
-    inorder(nod->left);
-    cout<<nod->val<<" ";
-    inorder(nod->right);
-}
-
-node * insert(node * root,int val)
-{
-    root = dup_insert(root,val);
-    inorder(root);
-    cout<<endl;
     return root;
 }
