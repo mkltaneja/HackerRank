@@ -30,6 +30,33 @@ int poisonousPlants(vector<int> p)
     return d;
 }
 
+// OR  ->  (BY USING STACKS)
+
+int poisonousPlants(vector<int> p)
+{
+    int minp = p[0], maxd = 0;
+    vector<int> days(p.size(), 0);
+    stack<int> st;
+    st.push(0);
+    for (unsigned long int i=1;i<p.size();i++)
+    {
+        if (p[i] > p[i-1])
+            days[i] = 1;
+
+        minp = min(minp, p[i]);
+        while (!st.empty() && p[i] <= p[st.top()])
+        {
+            if (p[i] > minp)
+                days[i] = max(days[i], days[st.top()] + 1);
+            st.pop();
+        }
+        maxd = max(days[i], maxd);
+        st.push(i);
+    }
+    return maxd;
+}
+
+
 int main()
 {
     ofstream fout(getenv("OUTPUT_PATH"));
