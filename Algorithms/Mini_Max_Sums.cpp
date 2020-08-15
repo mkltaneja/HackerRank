@@ -5,6 +5,8 @@ using namespace std;
 vector<string> split_string(string);
 
 // Complete the miniMaxSum function below.
+
+// Method 1 O(n*logn)
 void miniMaxSum(vector<int> arr) 
 {
     sort(arr.begin(),arr.end());
@@ -17,6 +19,52 @@ void miniMaxSum(vector<int> arr)
     }
     cout<<mins<<" "<<maxs<<endl;
 }
+
+
+int gcd(int a, int b)
+{
+    if(a == 0)
+        return b;
+    return gcd(b%a,a);
+}
+
+int lcm(int a, int b)
+{
+    return (a*b/gcd(a,b));
+}
+
+// Method 2 O(sqrt(n))
+int getTotalX(vector<int> a, vector<int> b) 
+{
+    int l = 1, g = 0;
+    for(int i : a)
+    {
+        l = lcm(min(l,i), max(l,i));
+        if(l > 100)
+            return 0;
+    }
+    for(int i : b)
+    {
+        g = gcd(min(g,i), max(g,i));
+        if(g % l != 0)
+            return 0;
+    }
+
+    int x = g/l;
+    int count = 0 ;
+    for(int i=1;i*i<=x;i++)
+    {
+        if(x % i == 0)
+        {
+            if(i == x/i)
+                count++;
+            else
+                count += 2;
+        }
+    }
+    return count;
+}
+
 
 int main()
 {
