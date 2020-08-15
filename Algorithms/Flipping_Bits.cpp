@@ -10,6 +10,13 @@ long flippingBits(long n)
     return n;
 }
 
+// OR
+
+unsigned flippingBits(unsigned n) 
+{
+    return ~n;
+}
+
 int main()
 {
     ofstream fout(getenv("OUTPUT_PATH"));
